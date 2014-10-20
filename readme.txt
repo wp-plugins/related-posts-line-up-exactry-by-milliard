@@ -14,15 +14,15 @@ If you do not want fix design by yourself or you want to increase PV , this plug
 
 1.Inspite of you set different aspect ratio thumbnails ,  posts line-up exactly horizontal as yahoo-tech.
 
-2.better design for:Gadget,Gourmet,Viral Media
+better design for:Gadget,Gourmet,Viral Media
 
-1. Infinity scroll increase count of impression as twitter or facebook
+2.Infinity scroll increase count of impression as twitter or facebook
 
-2.increase pv for:website has many posts
+increase pv for:website has many posts
 
-1.Good designed for Smartphone / Tablet / PC 
+3.Good designed for Smartphone / Tablet / PC 
 
-2.increase ov for:website has pc , tablet , smartphone users 
+increase ov for:website has pc , tablet , smartphone users 
 
 **Technical Features
 

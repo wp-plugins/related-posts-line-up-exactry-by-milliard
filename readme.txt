@@ -10,22 +10,26 @@ Stable tag: 0.0.1
 This is a good-design and responsive related page plugin.
 If you do not want fix design by yourself or you want to increase PV , this plugin is for you. 
 
-Features
+**Features
 
 1.Inspite of you set different aspect ratio thumbnails ,  posts line-up exactly horizontal as yahoo-tech.
-better design for:Gadget,Gourmet,Viral Media
 
-2. Infinity scroll increase count of impression as twitter or facebook
-increase pv for:website has many posts
+2.better design for:Gadget,Gourmet,Viral Media
 
-3.Good designed for Smartphone / Tablet / PC 
-increase ov for:website has pc , tablet , smartphone users 
+1. Infinity scroll increase count of impression as twitter or facebook
 
-Technical Features
+2.increase pv for:website has many posts
+
+1.Good designed for Smartphone / Tablet / PC 
+
+2.increase ov for:website has pc , tablet , smartphone users 
+
+**Technical Features
 
 This plugin do not delay load , because javascript load posts from our server after load post.
 
 (Japanese Below)
+
 関連ページをいい感じの見た目でレコメンドするツールです。
 
 関連ページのデザイン崩れを放置している方、閲覧数を増やしたいメディアやブロガー様にお使い頂いております。

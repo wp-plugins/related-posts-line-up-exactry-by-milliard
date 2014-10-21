@@ -51,5 +51,5 @@ This plugin do not delay load , because javascript load posts from our server af
 
 
 == Screenshots ==
-1. Line-up-Exactly screenshot(this is my japanese blog...)
+1./assets/image_01.jpg 
 

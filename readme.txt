@@ -10,7 +10,7 @@ Stable tag: 0.0.1
 This is a good-design and responsive related page plugin.
 If you do not want fix design by yourself or you want to increase PV , this plugin is for you. 
 
-**Features
+Features
 
 1.Inspite of you set different aspect ratio thumbnails ,  posts line-up exactly horizontal as yahoo-tech.
 
@@ -24,7 +24,7 @@ increase pv for:website has many posts
 
 increase ov for:website has pc , tablet , smartphone users 
 
-**Technical Features
+Technical Features
 
 This plugin do not delay load , because javascript load posts from our server after load post.
 

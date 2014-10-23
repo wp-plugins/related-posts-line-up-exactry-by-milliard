@@ -49,8 +49,3 @@ This plugin do not delay load , because javascript load posts from our server af
 
   PV増が期待出来るサイト：制作系、検索に強い、PCでもアクセスされやすい
 
-
-== Screenshots ==
-1.image01
-2.image02
-

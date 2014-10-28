@@ -4,7 +4,7 @@
 Plugin Name: シスウ関連ページ
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.1
+Version: 0.0.2
 */
 class ShisuhRelatedPage { 
 
@@ -18,10 +18,12 @@ class ShisuhRelatedPage {
 			$plugin = plugin_basename( __FILE__);
 			add_filter('plugin_action_links_' . $plugin, array($this, 'add_action_link') );
 			add_action('admin_menu', array($this, 'add_menu'));
-		}
-		
+		}		
 		add_filter('the_content', array($this,'add_content_end'));
 		add_action('rss2_item', array($this,'add_post_thumbnail'));
+		if(function_exists("add_shortcode")){
+			add_shortcode('milliard',array($this,'add_content_end'));
+		}
 	}
 
 	public function rss_url($link){
@@ -38,7 +40,8 @@ class ShisuhRelatedPage {
 		return $links;
 	}
 	public function add_content_end($content){
-		if(!is_feed() && !is_home() && is_single()) {
+		if(!is_feed() && !is_home() && is_single() && empty($this->isCalled)) {
+			$this->isCalled = true;
 			$alg = get_option("SS_RP_ALG");
 			if(!$alg){
 				$alg = "Related"; 
@@ -51,9 +54,13 @@ class ShisuhRelatedPage {
 			if(empty($show_insert)){
 				$show_insert = "1";
 			}
+			$htOpt = get_option("SS_RP_HEADER_TEXT"); 
+			$headerText = (empty($htOpt)) ? "" : 'Shisuh.headerText = \''.$htOpt.'\';';
+			$fOpt = get_option("SS_RP_FOOTER_TEXT_COLOR");
+			$footerTextColor = (empty($fOpt)) ? "" :'Shisuh.footerTextColor=\''.$fOpt.'\';';
 			$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
 			$script = '<script type="text/javascript">//<![CDATA[
-				window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";
+				window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.'
 			//]]>
 			</script><script id="ssRelatedPageSdk" type="text/javascript" src="https://'.$this->host.'/djs/relatedPageFeed/"></script>';
 			$content .= $script;

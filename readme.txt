@@ -3,14 +3,14 @@ Contributors:shisuh
 Tags: responsive , related , posts , 関連ページ , レスポンシブ ,infinity scroll 
 Requires at least: 2.8
 Tested up to: 4.0
-Stable tag: 0.0.1
+Stable tag: 0.0.2
 
 == Description ==
 
 This is a good-design and responsive related page plugin.
 If you do not want fix design by yourself or you want to increase PV , this plugin is for you. 
 
-**Features
+Features
 
 1.Inspite of you set different aspect ratio thumbnails ,  posts line-up exactly horizontal as yahoo-tech.
 
@@ -24,7 +24,7 @@ increase pv for:website has many posts
 
 increase ov for:website has pc , tablet , smartphone users 
 
-**Technical Features
+Technical Features
 
 This plugin do not delay load , because javascript load posts from our server after load post.
 
@@ -49,7 +49,14 @@ This plugin do not delay load , because javascript load posts from our server af
 
   PV増が期待出来るサイト：制作系、検索に強い、PCでもアクセスされやすい
 
+== Installation ==
 
-== Screenshots ==
-1./assets/image_01.jpg 
+Related posts apears about 10 minutes later after an access for some article.
+You might want to visit your article if posts would not appear.
 
+(Japanese)
+
+関連記事は最初に記事にアクセスがあってから10分程度したら現れます。
+もし、インストールしてからすぐにアクセスが来ない場合には、いずれかの記事にアクセスすると記事が出現するのが早まります。
+
+ 

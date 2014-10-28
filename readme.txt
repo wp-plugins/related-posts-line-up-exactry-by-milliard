@@ -49,3 +49,14 @@ This plugin do not delay load , because javascript load posts from our server af
 
   PV増が期待出来るサイト：制作系、検索に強い、PCでもアクセスされやすい
 
+== Installation ==
+
+Related posts apears about 10 minutes later after an access for some article.
+You might want to visit your article if posts would not appear.
+
+(Japanese)
+
+関連記事は最初に記事にアクセスがあってから10分程度したら現れます。
+もし、インストールしてからすぐにアクセスが来ない場合には、いずれかの記事にアクセスすると記事が出現するのが早まります。
+
+ 

@@ -4,7 +4,7 @@
 Plugin Name: シスウ関連ページ
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.2
+Version: 0.0.3
 */
 class ShisuhRelatedPage { 
 
@@ -22,7 +22,7 @@ class ShisuhRelatedPage {
 		add_filter('the_content', array($this,'add_content_end'));
 		add_action('rss2_item', array($this,'add_post_thumbnail'));
 		if(function_exists("add_shortcode")){
-			add_shortcode('milliard',array($this,'add_content_end'));
+			add_shortcode('milliard',array($this,'echo_shortcode'));
 		}
 	}
 
@@ -137,6 +137,9 @@ class ShisuhRelatedPage {
 				echo('<media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="'.$thumbs[0].'"/>');
 			}
 		}
+	}
+	public function echo_shortcode(){
+		return '<ins id="ssRelatedPageBase"></ins>';
 	}
 } 
 

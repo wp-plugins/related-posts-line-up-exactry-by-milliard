@@ -66,8 +66,16 @@
 					<div><a target="_blank" href="http://corp.shisuh.com/?p=497">よくあるカスタマイズ方法はこちらを参照下さい</a></div>
 				</th>
 			</tr>
-
-
+			<tr>
+				<th colspan="2">
+					<div><a target="_blank" href="http://corp.shisuh.com/milliard%E9%96%A2%E9%80%A3%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/">表示されない場合の対処法はこちら</a></div>
+				</th>
+			</tr>
+			<tr>
+				<th colspan="2">
+					<div><a target="_blank" href="http://www.shisuh.com/statics/relatedPageSetting/">どうしても表示されない場合は、こちらのページで生成したコードをsingle.phpの表示する場所に貼付けてください</a></div>
+				</th>
+			</tr>
 		</tbody>
 	</table>
 

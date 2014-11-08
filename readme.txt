@@ -3,7 +3,7 @@ Contributors:shisuh
 Tags: responsive , related , posts , 関連ページ , レスポンシブ ,infinity scroll 
 Requires at least: 2.8
 Tested up to: 4.0
-Stable tag: 0.0.2
+Stable tag: 0.0.4
 
 == Description ==
 

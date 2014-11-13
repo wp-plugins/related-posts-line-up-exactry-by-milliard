@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.4
+Version: 0.0.5
 */
 class ShisuhRelatedPage { 
 
@@ -12,19 +12,23 @@ class ShisuhRelatedPage {
 		define("SS_RP_PLUGIN_DIR",dirname(__FILE__));
 		$this->host = defined("SS_HOST") ? SS_HOST : "www.shisuh.com";
 		if ( is_admin() ) {
+			$match = preg_match("/plugins.php/i",$_SERVER["PHP_SELF"]);
 			$rp_init = get_option("SS_RP_INIT");
 			$rp_confirm = get_option("SS_RP_CONFIRM");
-			if(!empty($rp_init)){
+			if(!empty($rp_init) && $match){
+				$queries;
+				parse_str($_SERVER["QUERY_STRING"],$queries);
 				add_action('admin_head',array($this,"init_script"));
+				add_action('admin_head',array($this,"confirm_script"));
+				delete_option("SS_RP_INIT");
 			}
 			if(empty($rp_confirm)){
-				if($_GET["ssConfirmScript"] == 1){
-					update_option("SS_RP_CONFIRM",1);
-					echo "confirmed";
-					exit;
-				}else{
-					add_action('admin_head',array($this,"confirm_script"));
-				}
+				//if($_GET["ssConfirmScript"] == 1){
+				//	update_option("SS_RP_CONFIRM",1);
+				//	echo "confirmed";
+				//	exit;
+				//}
+				//
 			}
 			if($_GET["ssDebugInfo"]){
 				$this->echo_debug_info();
@@ -77,7 +81,6 @@ class ShisuhRelatedPage {
 		echo $script; 
 	}
 	public function confirm_script(){
-
 		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
 		$script = '<script type="text/javascript">//<![CDATA[
 			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";
@@ -146,13 +149,17 @@ class ShisuhRelatedPage {
 	public function template($template){
 		global $request;
 		if (ShisuhRelatedPage::isFeed($request)) {
-			return '';
+			if(isset($request["feed"])){
+				return '';
+			}else{
+				return $template;
+			}
 		}else{
 			return $template;
 		}
 	}
 	public static function isFeed($request){
-		return (isset($request['feed']) && $request['feed'] == 'shisuhRelatedPage'); 
+		return ((isset($request['feed']) && $request['feed'] == 'shisuhRelatedPage') || (isset($_GET['shisuhRelatedPage']) && $_GET['shisuhRelatedPage'] == '1')); 
 	}
 	public function load_template_index(){
 		do_feed_rss2(false);
@@ -177,11 +184,12 @@ class ShisuhRelatedPage {
 	public function filter_request($request){
 		$this->request = $request;
 		if (ShisuhRelatedPage::isFeed($request)) {
+			$request["feed"] = "shisuhRelatedPage";
 			add_action( 'pre_get_posts',array($this,'filter_feed'));
 			add_action( 'send_headers',array($this, 'send_nocache'));
-			add_action('do_feed_shisuhRelatedPage', array($this, 'load_template_index'), 10, 1);
 			add_action('post_limits', array($this, 'noLimit'),10,2);
 			add_filter('the_permalink_rss',array($this,'rss_url'),10000,10000);
+			add_action('do_feed_shisuhRelatedPage', array($this, 'load_template_index'), 10, 1);
 		}else{
 		}
 		return $request;

@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.5
+Version: 0.0.6
 */
 class ShisuhRelatedPage { 
 
@@ -37,7 +37,6 @@ class ShisuhRelatedPage {
 			add_filter('plugin_action_links_' . $plugin, array($this, 'add_action_link') );
 			add_action('admin_menu', array($this, 'add_menu'));
 		}else{		
-			add_filter('template', array($this, 'template'), 0);
 			add_filter('request', array($this, 'filter_request'), 1 );
 			add_filter('the_content', array($this,'add_content_end'));
 			add_action('rss2_item', array($this,'add_post_thumbnail'));
@@ -146,24 +145,20 @@ class ShisuhRelatedPage {
 		$p = SS_RP_PLUGIN_DIR."/includes/admin_setting.php"; 
 		include_once($p); 
 	}
-	public function template($template){
+	/*public function template($template){
 		global $request;
 		if (ShisuhRelatedPage::isFeed($request)) {
-			if(isset($request["feed"])){
-				return '';
-			}else{
-				return $template;
-			}
+			return $template;
 		}else{
 			return $template;
 		}
-	}
+	}*/
 	public static function isFeed($request){
 		return ((isset($request['feed']) && $request['feed'] == 'shisuhRelatedPage') || (isset($_GET['shisuhRelatedPage']) && $_GET['shisuhRelatedPage'] == '1')); 
 	}
 	public function load_template_index(){
 		do_feed_rss2(false);
-
+		exit;
 	}
 	public function noLimit($limits){
 		$startIndex= $_GET["startIndex"];
@@ -184,12 +179,12 @@ class ShisuhRelatedPage {
 	public function filter_request($request){
 		$this->request = $request;
 		if (ShisuhRelatedPage::isFeed($request)) {
-			$request["feed"] = "shisuhRelatedPage";
+			$request["feed"] = "";
 			add_action( 'pre_get_posts',array($this,'filter_feed'));
 			add_action( 'send_headers',array($this, 'send_nocache'));
 			add_action('post_limits', array($this, 'noLimit'),10,2);
 			add_filter('the_permalink_rss',array($this,'rss_url'),10000,10000);
-			add_action('do_feed_shisuhRelatedPage', array($this, 'load_template_index'), 10, 1);
+			add_action('template_redirect', array($this, 'load_template_index'), 10, 1);
 		}else{
 		}
 		return $request;

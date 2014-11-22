@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.6
+Version: 0.0.7
 */
 class ShisuhRelatedPage { 
 
@@ -126,8 +126,20 @@ class ShisuhRelatedPage {
 		$fOpt = get_option("SS_RP_FOOTER_TEXT_COLOR");
 		$footerTextColor = (empty($fOpt)) ? "" :'Shisuh.footerTextColor=\''.$fOpt.'\';';
 		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
+		$off_scroll = get_option("SS_RP_OFF_SCROLL");
+		if(!empty($off_scroll)){
+			$off_scroll = "Shisuh.offScroll = ".$off_scroll.";"; 
+		}else{
+			$off_scroll = "";
+		}
+		$off_scroll_count = get_option("SS_RP_OFF_SCROLL_COUNT");
+		if(!empty($off_scroll) && !empty($off_scroll_count)){
+			$off_scroll_count = "Shisuh.offScrollCount = ".$off_scroll_count.";";
+		}else{
+			$off_scroll_count = "";
+		}
 		$script = '<script type="text/javascript">//<![CDATA[
-			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.'
+			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.$off_scroll.$off_scroll_count.'
 		//]]>
 		</script><script id="ssRelatedPageSdk" type="text/javascript" src="https://'.$this->host.'/djs/relatedPageFeed/"></script>';
 		return $script;

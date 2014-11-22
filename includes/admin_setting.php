@@ -13,10 +13,12 @@
 	$show_insert = get_option("SS_RP_SHOW_INSERT");
 	$header_text = get_option("SS_RP_HEADER_TEXT"); 
 	$footer_text_color = get_option("SS_RP_FOOTER_TEXT_COLOR"); 
+	$off_scroll = get_option("SS_RP_OFF_SCROLL"); 
+	$off_scroll_count = get_option("SS_RP_OFF_SCROLL_COUNT"); 
 ?>
 <div class="wrap">
       <div id="icon-options-general" class="icon32"><br></div>
-      <h2>シスウ関連ページ設定</h2>
+      <h2>Milliard関連ページ設定</h2>
       <form action="" method="post">
 	<input type="hidden" value="1" value="update_options" />
 	<table class="form-table">
@@ -53,6 +55,15 @@
 				<td>
 					<div class="field">
 						<input type="text" placeholder="例：#6e6e6e" value="<?php echo $footer_text_color; ?>"  name="footerTextColor"/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">スマホでの表示</th>
+				<td>
+					<div class="field">
+						<input type="checkbox" name="offScroll" value="1" <?php if(!empty($off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
+						<?php if(!empty($off_scroll)){?><input type="" name="offScrollCount" style="width:40px;margin-left:20px;" value="<?php if(isset($off_scroll_count)){ echo $off_scroll_count; } ?>">件表示(デフォルト10件)<?php } ?>
 					</div>
 				</td>
 			</tr>

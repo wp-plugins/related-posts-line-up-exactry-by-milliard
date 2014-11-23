@@ -63,7 +63,7 @@
 				<td>
 					<div class="field">
 						<input type="checkbox" name="offScroll" value="1" <?php if(!empty($off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
-						<?php if(!empty($off_scroll)){?><input type="" name="offScrollCount" style="width:40px;margin-left:20px;" value="<?php if(isset($off_scroll_count)){ echo $off_scroll_count; } ?>">件表示(デフォルト10件)<?php } ?>
+						<?php if(!empty($off_scroll)){?><input type="" name="offScrollCount" style="width:40px;margin-left:20px;" value="<?php if(isset($off_scroll_count)){ echo $off_scroll_count; } ?>">件表示(デフォルト5件)<?php } ?>
 					</div>
 				</td>
 			</tr>

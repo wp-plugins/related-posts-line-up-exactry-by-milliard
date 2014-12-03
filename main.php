@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.8
+Version: 0.0.9
 */
 class ShisuhRelatedPage { 
 

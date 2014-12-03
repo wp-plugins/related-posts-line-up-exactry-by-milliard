@@ -20,6 +20,26 @@ class SS_RP_AdminLib{
 			}else{
 				delete_option('SS_RP_SHOW_INSERT');
 			}
+			if(!empty($_POST["headerText"])){
+				update_option('SS_RP_HEADER_TEXT',$_POST["headerText"]);
+			}else{
+				delete_option('SS_RP_HEADER_TEXT');
+			}
+			if(!empty($_POST["footerTextColor"])){
+				update_option('SS_RP_FOOTER_TEXT_COLOR',$_POST["footerTextColor"]);
+			}else{
+				delete_option('SS_RP_FOOTER_TEXT_COLOR');
+			}
+			if(!empty($_POST["offScroll"])){
+				update_option('SS_RP_OFF_SCROLL',$_POST["offScroll"]);
+			}else{
+				delete_option('SS_RP_OFF_SCROLL');
+			}
+			if(!empty($_POST["offScrollCount"])){
+				update_option('SS_RP_OFF_SCROLL_COUNT',$_POST["offScrollCount"]);
+			}else{
+				delete_option('SS_RP_OFF_SCROLL_COUNT');
+			}
 		}
 	}
 }

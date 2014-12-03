@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.7
+Version: 0.0.8
 */
 class ShisuhRelatedPage { 
 
@@ -38,8 +38,9 @@ class ShisuhRelatedPage {
 			add_action('admin_menu', array($this, 'add_menu'));
 		}else{		
 			add_filter('request', array($this, 'filter_request'), 1 );
-			add_filter('the_content', array($this,'add_content_end'));
-			add_action('rss2_item', array($this,'add_post_thumbnail'));
+			if(!defined("SS_RP_INVALIDATE") || !SS_RP_INVALIDATE){
+				add_filter('the_content', array($this,'add_content_end'));
+			}
 		}
 		if(function_exists("add_shortcode")){
 			add_shortcode('milliard',array($this,'echo_shortcode'));
@@ -85,7 +86,6 @@ class ShisuhRelatedPage {
 			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";
 		//]]>
 		</script><script id="ssConfirmRelatedPageScript" type="text/javascript" src="https://'.$this->host.'/djs/confirmRelatedPageScript/?requireLoader=1"></script>';
-
 		echo $script;
 	}
 	public function rss_url($link){
@@ -166,10 +166,10 @@ class ShisuhRelatedPage {
 		}
 	}*/
 	public static function isFeed($request){
-		return ((isset($request['feed']) && $request['feed'] == 'shisuhRelatedPage') || (isset($_GET['shisuhRelatedPage']) && $_GET['shisuhRelatedPage'] == '1')); 
+		return ((isset($request['feed']) && $request['feed'] == 'shisuhRelatedPage') || (isset($_GET['shisuhRelatedPage']) && $_GET['shisuhRelatedPage'] == '1') || (preg_match("/^\/shisuhRelatedPage\/([0-9a-z]+)\//i",$_SERVER["REQUEST_URI"]))); 
 	}
 	public function load_template_index(){
-		do_feed_rss2(false);
+		require_once SS_RP_PLUGIN_DIR."/includes/feed-rss2.php";  
 		exit;
 	}
 	public function noLimit($limits){
@@ -191,8 +191,7 @@ class ShisuhRelatedPage {
 	public function filter_request($request){
 		$this->request = $request;
 		if (ShisuhRelatedPage::isFeed($request)) {
-			$request["feed"] = "";
-			add_action( 'pre_get_posts',array($this,'filter_feed'));
+			unset($request["feed"]);
 			add_action( 'send_headers',array($this, 'send_nocache'));
 			add_action('post_limits', array($this, 'noLimit'),10,2);
 			add_filter('the_permalink_rss',array($this,'rss_url'),10000,10000);
@@ -202,7 +201,10 @@ class ShisuhRelatedPage {
 		return $request;
 	}
 	public function filter_feed($query){
-		$query->set('post_status','publish');
+		//$query = new WP_Query("post_status=publish"); 
+		//wp_reset_query();
+		//$query->set('post_status','publish');
+		//var_dump($query);
 	}
 	public function send_nocache(){
 		nocache_headers();

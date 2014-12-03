@@ -84,6 +84,10 @@
 			</tr>
 			<tr>
 				<th colspan="2">
+					<div><a target="_blank" href="http://corp.shisuh.com/milliard%e9%96%a2%e9%80%a3%e3%83%9a%e3%83%bc%e3%82%b8%e3%83%97%e3%83%a9%e3%82%b0%e3%82%a4%e3%83%b3%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6/">「よくあるご質問」はこちらを参照下さい</a></div>
+				</th>
+			<tr>
+				<th colspan="2">
 					<div><a target="_blank" href="http://www.shisuh.com/statics/relatedPageSetting/">どうしても表示されない場合は、こちらのページで生成したコードをsingle.phpの表示する場所に貼付けてください</a></div>
 				</th>
 			</tr>

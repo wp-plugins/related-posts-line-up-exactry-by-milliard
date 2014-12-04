@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.10
+Version: 0.0.11
 */
 class ShisuhRelatedPage { 
 
@@ -169,6 +169,7 @@ class ShisuhRelatedPage {
 		return ((isset($request['feed']) && $request['feed'] == 'shisuhRelatedPage') || (isset($_GET['shisuhRelatedPage']) && $_GET['shisuhRelatedPage'] == '1') || (preg_match("/^\/shisuhRelatedPage\/([0-9a-z]+)\//i",$_SERVER["REQUEST_URI"]))); 
 	}
 	public function load_template_index(){
+		nocache_headers();
 		require_once SS_RP_PLUGIN_DIR."/includes/feed-rss2.php";  
 		exit;
 	}
@@ -191,11 +192,17 @@ class ShisuhRelatedPage {
 	public function filter_request($request){
 		$this->request = $request;
 		if (ShisuhRelatedPage::isFeed($request)) {
-			unset($request["feed"]);
-			add_action( 'send_headers',array($this, 'send_nocache'));
+			//$request["feed"] = "";
+			//unset($request["category_name"]);
+			//unset($request["page"]);
+			//unset($request["name"]);
+			//add_action('do_feed_shisuhRelatedPage', array($this, 'load_template_index'), 10, 0);
+			//unset($request["feed"]);
+			//add_action( 'send_headers',array($this, 'send_nocache'));
+			//add_filter('the_permalink_rss',array($this,'rss_url'),10000,10000);
+			//add_action('template_redirect', array($this, 'load_template_index'), 10, 1);
 			add_action('post_limits', array($this, 'noLimit'),10,2);
-			add_filter('the_permalink_rss',array($this,'rss_url'),10000,10000);
-			add_action('template_redirect', array($this, 'load_template_index'), 10, 1);
+			$this->load_template_index();
 		}else{
 		}
 		return $request;

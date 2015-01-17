@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.11
+Version: 0.0.12
 */
 class ShisuhRelatedPage { 
 
@@ -12,10 +12,14 @@ class ShisuhRelatedPage {
 		define("SS_RP_PLUGIN_DIR",dirname(__FILE__));
 		$this->host = defined("SS_HOST") ? SS_HOST : "www.shisuh.com";
 		if ( is_admin() ) {
+			//add_action( 'add_meta_boxes', array( &$this, 'add_post_meta_box' ), 10, 2 );
 			$match = preg_match("/plugins.php/i",$_SERVER["PHP_SELF"]);
 			$rp_init = get_option("SS_RP_INIT");
 			$rp_confirm = get_option("SS_RP_CONFIRM");
 			if(!empty($rp_init) && $match){
+
+				require_once(SS_RP_PLUGIN_DIR."/includes/admin_lib.php");
+				$this->ss_rp_admin = $ss_rp_admin; 
 				$queries;
 				parse_str($_SERVER["QUERY_STRING"],$queries);
 				add_action('admin_head',array($this,"init_script"));
@@ -36,6 +40,11 @@ class ShisuhRelatedPage {
 			$plugin = plugin_basename( __FILE__);
 			add_filter('plugin_action_links_' . $plugin, array($this, 'add_action_link') );
 			add_action('admin_menu', array($this, 'add_menu'));
+			add_action( 'publish_post', array($this,"add_published"));
+			add_action('load-post.php',array($this,"add_published_script"));
+			if (!isset( $_REQUEST['post'] ) ){
+				delete_option("IS_PUBLISHED");
+			}
 		}else{		
 			add_filter('request', array($this, 'filter_request'), 1 );
 			if(!defined("SS_RP_INVALIDATE") || !SS_RP_INVALIDATE){
@@ -45,6 +54,26 @@ class ShisuhRelatedPage {
 		if(function_exists("add_shortcode")){
 			add_shortcode('milliard',array($this,'echo_shortcode'));
 		}
+	}
+	public function add_published(){
+		update_option("IS_PUBLISHED",1);
+	}
+	public function add_published_script(){
+
+		$post;
+		if ( isset( $_REQUEST['post'] ) ){
+			$post_id = (int) $_GET['post'];
+			$post = get_post( $post_id );
+			$is_published = get_option("IS_PUBLISHED");
+			if($post->post_status == "publish" && $post->post_type == "post" && $_REQUEST["message"] == "6" && !empty($is_published)){
+				//add_filter("the_content",array($this,"add_content_end_admin"),10000);
+				$this->post = $post;
+				$this->add_content_end_admin();
+			}
+		}
+		//TODO:パーマリンク
+		//TODO:isSingle
+
 	}
 	public function echo_debug_info(){
 
@@ -101,6 +130,14 @@ class ShisuhRelatedPage {
 		array_unshift( $links, $settings_link); 
 		return $links;
 	}
+	public function add_content_end_admin(){
+		if(is_admin()){
+			$script = $this->gen_admin_script(); 
+			//$content .= $script;
+			echo $script;
+		}
+		//return $content;
+	}
 	public function add_content_end($content){
 		if(!is_feed() && !is_home() && is_single()) {
 			$script = $this->gen_script(); 
@@ -137,12 +174,56 @@ class ShisuhRelatedPage {
 			$off_scroll_count = "Shisuh.offScrollCount = ".$off_scroll_count.";";
 		}else{
 			$off_scroll_count = "";
+		}	
+		$pages = $this->ss_rp_admin->get_static_pages();
+		$pages_str = "";
+		$pages_count = count($pages);
+		if( $pages_count > 0 ){
+			$pages_json = json_encode($pages);
+			$pages_str = "Shisuh.staticPages = ".$pages_json.";";
+		}
+		$script_url = "https://".$this->host."/djs/relatedPageFeed/";
+		if($this->host != "www.shisuh.com"){
+			$script_url .= "?debug=1";
 		}
 		$script = '<script type="text/javascript">//<![CDATA[
-			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.$off_scroll.$off_scroll_count.'
+			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.$off_scroll.$off_scroll_count.$pages_str.'
 		//]]>
-		</script><script id="ssRelatedPageSdk" type="text/javascript" src="https://'.$this->host.'/djs/relatedPageFeed/"></script>';
+		</script><script id="ssRelatedPageSdk" type="text/javascript" src="'.$script_url.'"></script>';
 		return $script;
+	}
+	public function gen_admin_script(){
+		$alg = get_option("SS_RP_ALG");
+		if(!$alg){
+			$alg = "Related"; 
+		}
+		$post = $this->post;
+		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
+		$perma = get_permalink($post->ID);
+		$script = '<script type="text/javascript" src="https://'.$this->host.'/relatedPage/api/feed/'.rawurlencode($home_url_str).'/?url='.rawurlencode($perma).'&alg='.$alg.'&type=Wordpress" async></script>';
+		return $script;
+
+	}
+	public function add_post_meta_box( $post_type, $post ) {
+		$post_type_obj = get_post_type_object( $post_type );
+		$output_flag = apply_filters( 'meta_manager_meta_box_display', true, $post_type, $post );
+		if ( $post_type_obj && $post_type_obj->public && $output_flag ) {
+			add_meta_box( 'post_meta_box', 'メタ情報',array( &$this, 'post_meta_box' ), $post_type, 'normal', 'high');
+		}
+	}
+
+	public function post_meta_box() {
+		global $post;
+		$post_keywords = get_post_meta( $post->ID, '_keywords', true ) ? get_post_meta( $post->ID, '_keywords', true ) : '';
+		$post_description = get_post_meta( $post->ID, '_description', true ) ? get_post_meta( $post->ID, '_description', true ) : '';
+	?>
+	<dl>
+		<dt>メタキーワード</dt>
+		<dd><input type="text" name="_keywords" id="post_keywords" size="100" value="<?php echo esc_html( $post_keywords ); ?>" /></dd>
+		<dt>メタディスクリプション</dt>
+		<dd><textarea name="_description" id="post_description" cols="100" rows="3"><?php echo esc_html( $post_description ); ?></textarea></dd>
+	</dl>
+	<?php
 	}
 	public function add_menu() {
 		add_options_page(

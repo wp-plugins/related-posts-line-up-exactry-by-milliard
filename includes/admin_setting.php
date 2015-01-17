@@ -1,8 +1,8 @@
 <?php 	
+	$dir = dirname(__FILE__);
+	include_once($dir."/admin_lib.php");
 	if (isset($_POST['update_options'])) {
 		$this->error = null;
-		$dir = dirname(__FILE__);
-		include_once($dir."/admin_lib.php");
 		$ss_rp_admin->update_options();
 	}	
 	$alg = get_option("SS_RP_ALG");
@@ -14,8 +14,14 @@
 	$header_text = get_option("SS_RP_HEADER_TEXT"); 
 	$footer_text_color = get_option("SS_RP_FOOTER_TEXT_COLOR"); 
 	$off_scroll = get_option("SS_RP_OFF_SCROLL"); 
-	$off_scroll_count = get_option("SS_RP_OFF_SCROLL_COUNT"); 
+	$off_scroll_count = get_option("SS_RP_OFF_SCROLL_COUNT");
+	$host = defined("SS_HOST") ? SS_HOST : "www.shisuh.com";
+	$isFinished = false; 
+	$pages = $ss_rp_admin->get_static_pages();
+
 ?>
+<link rel="stylesheet" type="text/css" href="//<?php echo $host; ?>/css/ssRelatedPageAdmin.css"></link>
+<script type="text/javascript" src="//<?php echo $host; ?>/djs/ssRelatedPageAdmin/?requireLoader=1"></script>
 <div class="wrap">
       <div id="icon-options-general" class="icon32"><br></div>
       <h2>Milliard関連ページ設定</h2>
@@ -68,6 +74,37 @@
 				</td>
 			</tr>
 			<tr>
+				<th scope="row">固定で表示するページ</th>
+				<td>
+					<div class="field ssPageContainer" >
+						<?php 
+						$p_count = count($pages);
+						if($p_count > 0){
+							foreach($pages as $key => $page){ 
+?>
+							<div class="ssPage" id="page_<?php echo $key; ?>">
+								<div class="sspageUrlContainer"><span class="label">URL:</span><span class="inputContainer"><input class="input sspageUrl" value="<?php echo $page["url"] ?>" name="sspage_url_<?php echo $key; ?>" type="text" placeholder="URLを入力してください"></span></div>
+								<div class="sspageTitleContainer"><span class="label">タイトル:</span><span class="inputContainer"><input class="input sspageTitle" value="<?php echo $page["title"] ?>" name="sspage_title_<?php echo $key; ?>" type="text" placeholder="タイトルを入力して下さい"></span></div>
+								<div class="sspageImageContainer"><span class="label">画像:</span><span class="inputContainer"><input class="input sspageImage" value="<?php echo $page["thumbnailUrl"] ?>" name="sspage_image_<?php echo $key; ?>" type="text" placeholder="画像のURLを入力して下さい"></span></div>
+								<div><button class="ssDeleteStaticPageButton">削除</button></div>
+							</div>
+
+							<?php }
+						}else{ ?>
+						<div class="ssPage" id="page_0">
+							<div class="sspageUrlContainer"><span class="label">URL:</span><span class="inputContainer"><input class="input sspageUrl" name="sspage_url_0" type="text" placeholder="URLを入力してください"></span></div>
+							<div class="sspageTitleContainer"><span class="label">タイトル:</span><span class="inputContainer"><input class="input sspageTitle" name="sspage_title_0" type="text" placeholder="タイトルを入力して下さい"></span></div>
+							<div class="sspageImageContainer"><span class="label">画像:</span><span class="inputContainer"><input class="input sspageImage" name="sspage_image_0" type="text" placeholder="画像のURLを入力して下さい"></span></div>
+							<div><button class="ssDeleteStaticPageButton">削除</button></div>
+						</div>
+						<?php } ?>
+					</div>
+					<div class="field">
+						<button id="ssAddStaticPageButton">追加</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<th colspan="2">
 					<input type="submit" name="update_options" class="button-primary" value="<?php _e('Save Changes'); ?>">
 				</th>
@@ -97,3 +134,10 @@
 	</form>
 </div>
 <?php ?>
+
+<div class="ssPage" id="ssStaticPageTmp" style="display:none;">
+	<div class="sspageUrlContainer"><span class="label">URL:</span><span class="inputContainer"><input class="input sspageUrl" type="text" placeholder="URLを入力してください"></span></div>
+	<div class="sspageTitleContainer"><span class="label">タイトル:</span><span class="inputContainer"><input class="input sspageTitle"  type="text" placeholder="タイトルを入力して下さい"></span></div>
+	<div class="sspageImageContainer"><span class="label">画像:</span><span class="inputContainer"><input class="input sspageImage" type="text" placeholder="画像のURLを入力して下さい"></span></div>
+	<div><button class="ssDeleteStaticPageButton">削除</button></div>
+</div>

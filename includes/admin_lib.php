@@ -40,7 +40,66 @@ class SS_RP_AdminLib{
 			}else{
 				delete_option('SS_RP_OFF_SCROLL_COUNT');
 			}
+			$this->delete_static_pages();
+			$mStrings = array("sspage_url_","sspage_title_","sspage_image_");
+			foreach ($_POST as $key => $value){
+				$isMatched = false;
+				foreach($mStrings as $match){
+					$strlen =strlen($match);
+					$head = substr($key,0,$strlen); 
+					if($head == $match){
+						$isMatched = true;
+					}
+				}
+				if($isMatched){
+					if(!empty($_POST[$key])){
+						update_option($key,$value);
+					}else{
+						delete_option($key);
+					}
+				}
+			}
 		}
+	}
+	public function delete_static_pages(){
+		$index = 0;
+		$prefix = "sspage";
+		while(!$isFinished){
+			$name = $prefix."_url_".$index;
+			$url = get_option($name);
+			if(empty($url)){
+				$isFinished = true;
+			}else{
+				delete_option($name);
+				delete_option($prefix."_title_".$index);
+				delete_option($prefix."_image_".$index);
+				$index = $index+1;
+			}
+		}
+	}
+	public function get_static_pages(){
+		$index = 0;
+		$pages = array();
+		$prefix = "sspage";
+		while(!$isFinished){
+			$name = $prefix."_url_".$index;
+			$url = get_option($name);
+			if(empty($url)){
+				$isFinished = true;
+			}else{
+				$page = array();
+				$page["url"] = $url;
+				$page["title"] = get_option($prefix."_title_".$index);
+				$img = get_option($prefix."_image_".$index);
+				if(!empty($img)){
+					$page["thumbnailUrl"] = $img;
+				} 
+				$page["static"] = 1;
+				array_push($pages,$page);
+				$index = $index+1;
+			}
+		}
+		return $pages;
 	}
 }
 

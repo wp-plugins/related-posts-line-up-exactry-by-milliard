@@ -175,7 +175,8 @@ class ShisuhRelatedPage {
 		}else{
 			$off_scroll_count = "";
 		}	
-		$pages = $this->ss_rp_admin->get_static_pages();
+		//$pages = $this->ss_rp_admin->get_static_pages();
+		$pages = array();
 		$pages_str = "";
 		$pages_count = count($pages);
 		if( $pages_count > 0 ){

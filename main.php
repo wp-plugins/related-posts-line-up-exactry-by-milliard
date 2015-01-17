@@ -46,6 +46,9 @@ class ShisuhRelatedPage {
 				delete_option("IS_PUBLISHED");
 			}
 		}else{		
+
+			require_once(SS_RP_PLUGIN_DIR."/includes/admin_lib.php");
+			$this->ss_rp_admin = $ss_rp_admin; 
 			add_filter('request', array($this, 'filter_request'), 1 );
 			if(!defined("SS_RP_INVALIDATE") || !SS_RP_INVALIDATE){
 				add_filter('the_content', array($this,'add_content_end'));

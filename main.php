@@ -4,7 +4,7 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.14
+Version: 0.0.15
 */
 class ShisuhRelatedPage { 
 
@@ -166,8 +166,19 @@ class ShisuhRelatedPage {
 		$fOpt = get_option("SS_RP_FOOTER_TEXT_COLOR");
 		$footerTextColor = (empty($fOpt)) ? "" :'Shisuh.footerTextColor=\''.$fOpt.'\';';
 		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
+		$original_template = "";
+		$small_template = get_option("SS_RP_ORIGINAL_TEMPLATE_SMALL");
+		$large_template = get_option("SS_RP_ORIGINAL_TEMPLATE_LARGE");
+		if(!function_exists("wp_is_mobile")){
+			include_once(SS_RP_PLUGIN_DIR."/includes/wp_is_mobile.php");
+		}
+		if(wp_is_mobile() && !empty($small_template)){
+			$original_template = $small_template;
+		}else if(!wp_is_mobile() && !empty($large_template)){
+			$original_template = $large_template;
+		}
 		$off_scroll = get_option("SS_RP_OFF_SCROLL");
-		if(!empty($off_scroll)){
+		if(!empty($off_scroll) && empty($original_template)){
 			$off_scroll = "Shisuh.offScroll = ".$off_scroll.";"; 
 		}else{
 			$off_scroll = "";
@@ -177,7 +188,7 @@ class ShisuhRelatedPage {
 			$off_scroll_count = "Shisuh.offScrollCount = ".$off_scroll_count.";";
 		}else{
 			$off_scroll_count = "";
-		}	
+		}
 		$pages = $this->ss_rp_admin->get_static_pages();
 		$pages_str = "";
 		$pages_count = count($pages);
@@ -188,9 +199,26 @@ class ShisuhRelatedPage {
 		$script_url = "https://".$this->host."/djs/relatedPageFeed/";
 		if($this->host != "www.shisuh.com"){
 			$script_url .= "?debug=1";
+		}	
+		if(!empty($original_template)){
+			$original_template = str_replace(array("\r\n","\t"),"",$original_template);
+			$original_template = "Shisuh.originalTemplate = '".$original_template."';"; 
+			$is_off_scroll = (get_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL") == "off");
+			if($is_off_scroll){
+				$original_template .= "Shisuh.originalTemplateOffScroll = 1;";
+				$original_template_off_scroll_count = get_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT");
+				if(empty($original_template_off_scroll_count)){
+					$original_template_off_scroll_count = 5;
+				}
+				$original_template .= "Shisuh.originalTemplateOffScrollCount = ".$original_template_off_scroll_count.";"; 
+			}
+			$alt_img = get_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG");
+			if(!empty($alt_img)){
+				$original_template .= "Shisuh.originalTemplatAltImg = \"".$alt_img."\";";
+			}
 		}
 		$script = '<script type="text/javascript">//<![CDATA[
-			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.$off_scroll.$off_scroll_count.$pages_str.'
+			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.$off_scroll.$off_scroll_count.$pages_str.$original_template.'
 		//]]>
 		</script><script id="ssRelatedPageSdk" type="text/javascript" src="'.$script_url.'"></script>';
 		return $script;
@@ -317,6 +345,11 @@ class ShisuhRelatedPage {
 $srp = & new ShisuhRelatedPage();
 function initSSRP(){
 	update_option("SS_RP_INIT",1);
+	$on_scroll = get_option("SS_RP_ON_SCROLL");
+	if(empty($on_scroll)){
+		update_option("SS_RP_OFF_SCROLL",1);
+	}
+
 }
 function invalidateSSRP(){
 	delete_option("SS_RP_INIT");

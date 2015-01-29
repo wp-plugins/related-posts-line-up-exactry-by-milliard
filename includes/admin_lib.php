@@ -32,8 +32,10 @@ class SS_RP_AdminLib{
 			}
 			if(!empty($_POST["offScroll"])){
 				update_option('SS_RP_OFF_SCROLL',$_POST["offScroll"]);
+				delete_option("SS_RP_ON_SCROLL","1");
 			}else{
 				delete_option('SS_RP_OFF_SCROLL');
+				update_option("SS_RP_ON_SCROLL","1");
 			}
 			if(!empty($_POST["offScrollCount"])){
 				update_option('SS_RP_OFF_SCROLL_COUNT',$_POST["offScrollCount"]);
@@ -58,6 +60,31 @@ class SS_RP_AdminLib{
 						delete_option($key);
 					}
 				}
+			}
+			if(!empty($_POST["ssOriginalTemplateLarge"])){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_LARGE",$_POST["ssOriginalTemplateLarge"]);
+			}else{
+				delete_option("SS_RP_ORIGINAL_TEMPLATE_LARGE");
+			}
+			if(!empty($_POST["ssOriginalTemplateSmall"])){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_SMALL",$_POST["ssOriginalTemplateSmall"]);
+			}else{
+				delete_option("SS_RP_ORIGINAL_TEMPLATE_SMALL");
+			}
+			if($_POST["ssOriginalTemplateScroll"] == "off"){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL","off");
+			}else{
+				update_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL","on");
+			}
+			if(!empty($_POST["ssOriginalTemplateOffScrollCount"])){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT",$_POST["ssOriginalTemplateOffScrollCount"]);
+			}else{
+				delete_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT");
+			}
+			if(!empty($_POST["ssOriginalTemplateAltImg"])){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG",$_POST["ssOriginalTemplateAltImg"]);
+			}else{
+				delete_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG");
 			}
 		}
 	}

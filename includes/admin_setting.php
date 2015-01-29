@@ -18,7 +18,11 @@
 	$host = defined("SS_HOST") ? SS_HOST : "www.shisuh.com";
 	$isFinished = false; 
 	$pages = $ss_rp_admin->get_static_pages();
-
+	$original_template_large = stripslashes(get_option("SS_RP_ORIGINAL_TEMPLATE_LARGE"));
+	$original_template_small = stripslashes(get_option("SS_RP_ORIGINAL_TEMPLATE_SMALL"));
+	$is_original_template_off_scroll = (get_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL") == "off");
+	$original_template_off_scroll_count = get_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT");
+	$original_template_alt_img = get_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG");
 ?>
 <link rel="stylesheet" type="text/css" href="//<?php echo $host; ?>/css/ssRelatedPageAdmin.css"></link>
 <script type="text/javascript" src="//<?php echo $host; ?>/djs/ssRelatedPageAdmin/?requireLoader=1"></script>
@@ -103,6 +107,30 @@
 						<button id="ssAddStaticPageButton">追加</button>
 					</div>
 				</td>
+			</tr>
+			<tr>
+				<th scope="row">独自テンプレート</th>
+				<td>
+					<div class="field">
+						<!--<div><span>振り分けロジック</span>：<span><select name="ssOriginalTemplateLogic"><option value="eordpress">Wordpress</option><option value="Responsive">640pxを基準に</option></select></span></div>-->
+						<div class="child"><input type="checkbox" name="ssOriginalTemplateScroll" value="off" <?php if(!empty($is_original_template_off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
+						<?php if(!empty($is_original_template_off_scroll)){?><input type="" name="ssOriginalTemplateOffScrollCount" style="width:40px;margin-left:20px;" value="<?php if(isset($original_template_off_scroll_count)){ echo $original_template_off_scroll_count; } ?>">件表示(デフォルト5件)<?php } ?></div>
+						<div class="child">
+							<div id="ssOriginalTemplateLabelLarge">PC（<a target="_blank" href="http://corp.shisuh.com/milliard%e9%96%a2%e9%80%a3%e3%83%9a%e3%83%bc%e3%82%b8%e3%81%ae%e3%82%88%e3%81%8f%e3%81%82%e3%82%8b%e3%82%ab%e3%82%b9%e3%82%bf%e3%83%9e%e3%82%a4%e3%82%ba%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6wordpress/#customize">⇒カスタマイズ例はこちら</a>）</div>
+							<textarea placeholder="HTMLを入力してください。" name="ssOriginalTemplateLarge" style="width:100%;" rows=10><?php echo $original_template_large; ?></textarea>
+						</div>
+						<div class="child">
+							<div id="ssOriginalTemplateLabelSmall">スマートフォン・タブレット（<a target="_blank" href="http://corp.shisuh.com/milliard%e9%96%a2%e9%80%a3%e3%83%9a%e3%83%bc%e3%82%b8%e3%81%ae%e3%82%88%e3%81%8f%e3%81%82%e3%82%8b%e3%82%ab%e3%82%b9%e3%82%bf%e3%83%9e%e3%82%a4%e3%82%ba%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6wordpress/#customize">⇒カスタマイズ例はこちら</a>）</div>
+							<textarea placeholder="HTMLを入力してください。" name="ssOriginalTemplateSmall" style="width:100%;" rows=10><?php echo $original_template_small; ?></textarea>
+						</div>
+						<div class="child">
+							<div>エラー時の代替画像</div>
+							<div><input type="text" value="<?php if(!empty($original_template_alt_img)){ echo $original_template_alt_img; } ?>" name="ssOriginalTemplateAltImg" style="width:100%;" placeholder="画像のURLを入力してください。"></input></div>
+						</div>
+						<div class="child">※レスポンシブデザインの場合には、PC  / スマートフォン・タブレットに同じHTMLを入力して下さい。</div>
+					</div>
+				</td>
+			<tr>
 			</tr>
 			<tr>
 				<th colspan="2">

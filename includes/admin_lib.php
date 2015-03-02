@@ -76,15 +76,67 @@ class SS_RP_AdminLib{
 			}else{
 				update_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL","on");
 			}
+			if($_POST["ssOriginalTemplateScrollMobile"] == "off"){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL_MOBILE","off");
+			}else{
+				update_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL_MOBILE","on");
+			}
 			if(!empty($_POST["ssOriginalTemplateOffScrollCount"])){
 				update_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT",$_POST["ssOriginalTemplateOffScrollCount"]);
 			}else{
 				delete_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT");
 			}
+			if(!empty($_POST["ssOriginalTemplateOffScrollCountMobile"])){
+				update_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT_MOBILE",$_POST["ssOriginalTemplateOffScrollCountMobile"]);
+			}else{
+				delete_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT_MOBILE");
+			}
 			if(!empty($_POST["ssOriginalTemplateAltImg"])){
 				update_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG",$_POST["ssOriginalTemplateAltImg"]);
 			}else{
 				delete_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG");
+			}
+			//desginSetting
+			if(!empty($_POST["designSetting"])){
+				update_option("SS_RP_DESIGN_SETTING",$_POST["designSetting"]);
+			}else{
+				delete_option("SS_RP_DESIGN_SETTING");
+			}
+			//desginType
+			if(!empty($_POST["designType"])){
+				update_option("SS_RP_DESIGN_TYPE",$_POST["designType"]);
+			}else{
+				delete_option("SS_RP_DESIGN_TYPE");
+			}
+			if(!empty($_POST["responsiveWideTemplateType"])){
+				update_option("SS_RP_RESPONSIVE_WIDE_TEMPLATE_TYPE",$_POST["responsiveWideTemplateType"]);
+			}else{
+				delete_option("SS_RP_RESPONSIVE_WIDE_TEMPLATE_TYPE");
+			}
+			if(!empty($_POST["responsiveNarrowTemplateType"])){
+				update_option("SS_RP_RESPONSIVE_NARROW_TEMPLATE_TYPE",$_POST["responsiveNarrowTemplateType"]);
+			}else{
+				delete_option("SS_RP_RESPONSIVE_NARROW_TEMPLATE_TYPE");
+			}
+			if(!empty($_POST["responsiveWideTemplate"])){
+				update_option("SS_RP_RESPONSIVE_WIDE_TEMPLATE",$_POST["responsiveWideTemplate"]);
+			}else{
+				delete_option("SS_RP_RESPONSIVE_WIDE_TEMPLATE");
+			}
+			if(!empty($_POST["responsiveNarrowTemplate"])){
+				update_option("SS_RP_RESPONSIVE_NARROW_TEMPLATE",$_POST["responsiveNarrowTemplate"]);
+			}else{
+				delete_option("SS_RP_RESPONSIVE_NARROW_TEMPLATE");
+			}
+			if(!empty($_POST["responsiveWideOffScroll"])){
+				update_option("SS_RP_RESPONSIVE_WIDE_OFF_SCROLL",$_POST["responsiveWideOffScroll"]);
+			}else{
+				delete_option("SS_RP_RESPONSIVE_WIDE_OFF_SCROLL");
+			}
+			if(!empty($_POST["responsiveWideOffScrollCount"])){
+				update_option("SS_RP_RESPONSIVE_WIDE_OFF_SCROLL_COUNT",$_POST["responsiveWideOffScrollCount"]);
+			}else{
+				delete_option("SS_RP_RESPONSIVE_WIDE_OFF_SCROLL_COUNT");
 			}
 		}
 	}
@@ -130,5 +182,5 @@ class SS_RP_AdminLib{
 	}
 }
 
-$ss_rp_admin = & new SS_RP_AdminLib();
+$ss_rp_admin = new SS_RP_AdminLib();
 ?>

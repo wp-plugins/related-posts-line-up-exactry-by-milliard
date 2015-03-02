@@ -4,14 +4,16 @@
 Plugin Name: Milliard Related Page
 Description: Related Post Plugin which insert and line extactly related posts bottom of <body> and content. 
 Author: Shisuh.inc
-Version: 0.0.15
+Version: 0.0.16
 */
 class ShisuhRelatedPage { 
 
 	function __construct() {
 		define("SS_RP_PLUGIN_DIR",dirname(__FILE__));
 		$this->host = defined("SS_HOST") ? SS_HOST : "www.shisuh.com";
-		if ( is_admin() ) {
+		if(!function_exists("is_admin")){
+			$this->load_template_index();
+		}else if ( is_admin() ) {
 			//add_action( 'add_meta_boxes', array( &$this, 'add_post_meta_box' ), 10, 2 );
 			$match = preg_match("/plugins.php/i",$_SERVER["PHP_SELF"]);
 			$rp_init = get_option("SS_RP_INIT");
@@ -165,32 +167,10 @@ class ShisuhRelatedPage {
 		$headerText = (empty($htOpt)) ? "" : 'Shisuh.headerText = \''.$htOpt.'\';';
 		$fOpt = get_option("SS_RP_FOOTER_TEXT_COLOR");
 		$footerTextColor = (empty($fOpt)) ? "" :'Shisuh.footerTextColor=\''.$fOpt.'\';';
-		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
-		$original_template = "";
-		$small_template = get_option("SS_RP_ORIGINAL_TEMPLATE_SMALL");
-		$large_template = get_option("SS_RP_ORIGINAL_TEMPLATE_LARGE");
-		if(!function_exists("wp_is_mobile")){
-			include_once(SS_RP_PLUGIN_DIR."/includes/wp_is_mobile.php");
-		}
-		if(wp_is_mobile() && !empty($small_template)){
-			$original_template = $small_template;
-		}else if(!wp_is_mobile() && !empty($large_template)){
-			$original_template = $large_template;
-		}
-		$off_scroll = get_option("SS_RP_OFF_SCROLL");
-		if(!empty($off_scroll) && empty($original_template)){
-			$off_scroll = "Shisuh.offScroll = ".$off_scroll.";"; 
-		}else{
-			$off_scroll = "";
-		}
-		$off_scroll_count = get_option("SS_RP_OFF_SCROLL_COUNT");
-		if(!empty($off_scroll) && !empty($off_scroll_count)){
-			$off_scroll_count = "Shisuh.offScrollCount = ".$off_scroll_count.";";
-		}else{
-			$off_scroll_count = "";
-		}
+		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );	
 		$pages = $this->ss_rp_admin->get_static_pages();
 		$pages_str = "";
+		$home_url_str = (function_exists("home_url")) ? home_url() : get_bloginfo( 'url' );
 		$pages_count = count($pages);
 		if( $pages_count > 0 ){
 			$pages_json = json_encode($pages);
@@ -199,28 +179,99 @@ class ShisuhRelatedPage {
 		$script_url = "https://".$this->host."/djs/relatedPageFeed/";
 		if($this->host != "www.shisuh.com"){
 			$script_url .= "?debug=1";
-		}	
-		if(!empty($original_template)){
-			$original_template = str_replace(array("\r\n","\t"),"",$original_template);
-			$original_template = "Shisuh.originalTemplate = '".$original_template."';"; 
-			$is_off_scroll = (get_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL") == "off");
-			if($is_off_scroll){
-				$original_template .= "Shisuh.originalTemplateOffScroll = 1;";
-				$original_template_off_scroll_count = get_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT");
-				if(empty($original_template_off_scroll_count)){
-					$original_template_off_scroll_count = 5;
+		}
+		$design_type = get_option("SS_RP_DESIGN_TYPE");
+		$original_template = "";
+		$off_scroll = "";
+		$off_scroll_count = "";
+		if(!$design_type){
+			$design_type = "responsive";
+		}
+		if($design_type == "responsive"){
+			$responsive_wide_template_type = get_option("SS_RP_RESPONSIVE_WIDE_TEMPLATE_TYPE");
+			$responsive_narrow_template_type = get_option("SS_RP_RESPONSIVE_NARROW_TEMPLATE_TYPE");
+			$responsive_wide_off_scroll = get_option("SS_RP_RESPONSIVE_WIDE_OFF_SCROLL");
+			$responsive_wide_off_scroll_count = get_option("SS_RP_RESPONSIVE_WIDE_OFF_SCROLL_COUNT");
+			$responsive_wide_template = get_option("SS_RP_RESPONSIVE_WIDE_TEMPLATE");
+			$responsive_narrow_template = get_option("SS_RP_RESPONSIVE_NARROW_TEMPLATE");
+			/**SCROLL WIDE**/
+			if(!empty($responsive_wide_off_scroll)){
+				$off_scroll .= "Shisuh.originalTemplateOffScrollWide = 1;";
+				if(!empty($responsive_wide_off_scroll_count)){
+					$off_scroll .= "Shisuh.originalTemplateOffScrollCountWide = ".$responsive_wide_off_scroll_count.";";
+				}else{
+					$off_scroll .= "Shisuh.originalTemplateOffScrollCountWide = 5;";
 				}
-				$original_template .= "Shisuh.originalTemplateOffScrollCount = ".$original_template_off_scroll_count.";"; 
 			}
-			$alt_img = get_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG");
-			if(!empty($alt_img)){
-				$original_template .= "Shisuh.originalTemplatAltImg = \"".$alt_img."\";";
+			/**SCROLL NARROW**/
+			$off_scroll_narrow = get_option("SS_RP_OFF_SCROLL");
+			if(!empty($off_scroll_narrow)){
+				$off_scroll .= "Shisuh.offScroll = ".$off_scroll_narrow.";"; 
+			}else{
+				$off_scroll .= "";
+			}
+			$off_scroll_count_narrow = get_option("SS_RP_OFF_SCROLL_COUNT");
+			if(!empty($off_scroll_narrow) && !empty($off_scroll_count_narrow)){
+				$off_scroll_count .= "Shisuh.offScrollCount = ".$off_scroll_count_narrow.";";
+			}else{
+				$off_scroll_count .= "";
+			}
+			/**TEMPLATE TYPE**/
+			if($responsive_wide_template_type == "list"){
+				$original_template .= "Shisuh.originalTemplateTypeWide = \"List\";";
+			}
+			if($responsive_narrow_template_type == "list"){
+				$original_template .= "Shisuh.originalTemplateTypeNarrow = \"List\";";
+			}
+			/**TEMPLATE**/
+			if(!empty($responsive_wide_template)){
+				$responsive_wide_template = str_replace(array("\r\n","\t"),"",$responsive_wide_template);
+				$original_template .= "Shisuh.originalTemplateWide = '".$responsive_wide_template."';"; 
+			}
+			if(!empty($responsive_narrow_template)){
+				$responsive_narrow_template = str_replace(array("\r\n","\t"),"",$responsive_narrow_template);
+				$original_template .= "Shisuh.originalTemplateNarrow = '".$responsive_narrow_template."';"; 
+			}
+			
+		}else{
+			$small_template = get_option("SS_RP_ORIGINAL_TEMPLATE_SMALL");
+			$large_template = get_option("SS_RP_ORIGINAL_TEMPLATE_LARGE");
+			$off_scroll_raw;
+			$original_template_off_scroll;
+			$original_template_off_scroll_count;
+			if(!function_exists("wp_is_mobile")){
+				include_once(SS_RP_PLUGIN_DIR."/includes/wp_is_mobile.php");
+			}
+			if(wp_is_mobile() && !empty($small_template)){
+				$original_template = $small_template;
+				$off_scroll_raw = get_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL_MOBILE");
+				$original_template_off_scroll_count = get_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT_MOBILE");
+			}else if(!wp_is_mobile() && !empty($large_template)){
+				$original_template = $large_template;
+				$off_scroll_raw = get_option("SS_RP_ORIGINAL_TEMPLATE_SCROLL");
+				$original_template_off_scroll_count = get_option("SS_RP_ORIGINAL_TEMPLATE_OFF_SCROLL_COUNT");
+			}
+			if(!empty($original_template)){
+				$original_template = str_replace(array("\r\n","\t"),"",$original_template);
+				$original_template = "Shisuh.originalTemplate = '".$original_template."';";
+				$is_off_scroll = ($off_scroll_raw == "off");
+				if($is_off_scroll){
+					$original_template .= "Shisuh.originalTemplateOffScroll = 1;";
+					if(empty($original_template_off_scroll_count)){
+						$original_template_off_scroll_count = 5;
+					}
+					$original_template .= "Shisuh.originalTemplateOffScrollCount = ".$original_template_off_scroll_count.";"; 
+				}
+				$alt_img = get_option("SS_RP_ORIGINAL_TEMPLATE_ALT_IMG");
+				if(!empty($alt_img)){
+					$original_template .= "Shisuh.originalTemplatAltImg = \"".$alt_img."\";";
+				}
 			}
 		}
 		$script = '<script type="text/javascript">//<![CDATA[
 			window.Shisuh = (window.Shisuh) ? window.Shisuh : {};Shisuh.topUrl="'.$home_url_str.'/";Shisuh.type="Wordpress";Shisuh.alg="'.$alg.'";Shisuh.showBottom="'.$show_bottom.'";Shisuh.showInsert="'.$show_insert.'";'.$headerText.$footerTextColor.$off_scroll.$off_scroll_count.$pages_str.$original_template.'
 		//]]>
-		</script><script id="ssRelatedPageSdk" type="text/javascript" src="'.$script_url.'"></script>';
+		</script><script id="ssRelatedPageSdk" type="text/javascript" src="'.$script_url.'" async></script>';
 		return $script;
 	}
 	public function gen_admin_script(){

@@ -131,7 +131,7 @@
 							<input type="checkbox" name="responsiveWideOffScroll" value="1" <?php if(!empty($responsive_wide_off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
 							<input class="offScrollCountResponsiveList offScrollCount" type="text" name="responsiveWideOffScrollCount" value="<?php if(!empty($responsive_wide_off_scroll_count)){ echo $responsive_wide_off_scroll_count; } ?>">件表示(デフォルト5件)
 						</div>
-						<div class="showDetailOnly templateTypeTab" id="responsiveWideTemplateType.original">
+						<div class="templateTypeTab" id="responsiveWideTemplateType.original">
 
 							<input type="checkbox" name="responsiveWideOffScroll" value="1" <?php if(!empty($responsive_wide_off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
 							<input class="offScrollCountResponsiveList offScrollCount" type="text" name="responsiveWideOffScrollCount" value="<?php if(!empty($responsive_wide_off_scroll_count)){ echo $responsive_wide_off_scroll_count; } ?>">件表示(デフォルト5件)
@@ -164,7 +164,7 @@
 							<input type="checkbox" name="offScroll" value="1" <?php if(!empty($off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
 							<input class="offScrollCountResponsiveList offScrollCount" type="text" name="offScrollCount"  value="<?php if(isset($off_scroll_count)){ echo $off_scroll_count; } ?>">件表示(デフォルト5件)
 						</div>
-						<div class="templateTypeTab showDetailOnly" id="responsiveNarrowTemplateType.original">
+						<div class="templateTypeTab" id="responsiveNarrowTemplateType.original">
 
 							<input type="checkbox" name="offScroll" value="1" <?php if(!empty($off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
 							<input class="offScrollCount" type="text" name="offScrollCount" value="">件表示(デフォルト5件)

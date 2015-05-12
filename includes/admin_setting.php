@@ -157,7 +157,7 @@
 					<div class="templateValue">
 						<div class="templateTypeTab" id="responsiveNarrowTemplateType.panel">
 							<input type="checkbox" name="offScroll" value="1" <?php if(!empty($off_scroll)){ ?>checked<?php } ?>>挿入箇所のスクロールを無効にする
-							<?php if(!empty($off_scroll)){?><input type="text" name="offScrollCount" class="offScrollCount" value="<?php if(isset($off_scroll_count)){ echo $off_scroll_count; } ?>">件表示(デフォルト5件)<?php } ?>
+							<input type="text" name="offScrollCount" class="offScrollCount" value="<?php if(isset($off_scroll_count)){ echo $off_scroll_count; } ?>">件表示(デフォルト5件)
 						</div>
 						<div class="templateTypeTab" id="responsiveNarrowTemplateType.list">
 
